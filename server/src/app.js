@@ -6,10 +6,11 @@ const logger = require('morgan');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken')
-
-
-
-
+const register = require('./controller/register')
+const login = require('./controller/login')
+const router = express.Router()
+const authenticate = require('./middleware/auth')
+const createProduct = require('./controller/createProduct')
 //-------- DB configration ----------------------
 mongoose.connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
@@ -31,23 +32,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
-// middleware for authenticating users
-
-function authenticateToken(req, res, next) {
-    const authHeader = req.headers['authorization']
-    const token = authHeader && authHeader.split(' ')[1]
-    if (token == null) return res.sendStatus(401)
   
-    jwt.verify(token, process.env.ACESSTOKENSECRET, (err, data) => {
-      if (err) return res.sendStatus(403)
-      req.userId = data.user._id
-      req.email = data.user.email
-      next()
-    })
-  }
-  
-
-  
-
+  app.post('/register', register)
+  app.post('/login', login)
+  app.post('/create', authenticate, createProduct)
+  app.get('me', (req, res)=>{
+    res.send("a7a")
+  })
 
 module.exports = app
