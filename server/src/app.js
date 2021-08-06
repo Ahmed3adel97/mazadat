@@ -37,7 +37,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
   app.post('/login', login)
   app.post('/create', authenticate, createProduct)
   app.get('me', (req, res)=>{
-    res.send("a7a")
   })
 
 module.exports = app
